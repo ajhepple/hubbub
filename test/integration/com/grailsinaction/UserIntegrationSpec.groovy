@@ -74,4 +74,52 @@ class UserIntegrationSpec extends Specification {
         then: "The user is removed from the database"
         !User.exists(foundUser.id)
     }
+
+    def "Saving a user with invalid properties causes an error" () {
+        
+        given: "A user which fails several field validations"
+        def user = new User(loginId: 'joe', password: 'tiny', homepage: 'not-a-url')
+    
+        when: "The user is validated"
+        user.validate()
+
+        then:
+        user.hasErrors()
+        "size.toosmall" == user.errors.getFieldError("password").code
+        "tiny" == user.errors.getFieldError("password").rejectedValue
+        "url.invalid" == user.errors.getFieldError("homepage").code
+        "not-a-url" == user.errors.getFieldError("homepage").rejectedValue
+        !user.errors.getFieldError("loginId")
+    }
+
+    def "Recovering from a failed save by fixing invalid properties" () {
+        
+        given: "A uer that has invalid properties" 
+        def chuck = new User(loginId: 'chuck', password: 'tiny', homepage: 'not-a-url')
+        assert chuck.save() == null
+        assert chuck.hasErrors()
+
+        when: "We fix the invalid properties"
+        chuck.clearErrors()
+        assert !chuck.hasErrors()
+        chuck.password = "fistcuff"
+        chuck.homepage = "http://www.chucknorrisfacts.com"
+        chuck.validate()
+
+        then: "The user saves and validates."
+        !chuck.hasErrors()
+        chuck.save()
+    }
+
+    def "Saving a user with similar username and password causes an error" () {
+    
+        given: "A user with similar username and password"
+        def fred = new User(loginId: 'freddy', password: 'freddy', homepage: 'http://www.fred.com')
+    
+        when: "The user is saved"
+        fred.save()
+    
+        then: "There is an appropriate password error code"
+        fred.errors.getFieldError("password").code == "equals.username"
+    }
 }
