@@ -24,6 +24,8 @@ class User {
              (pwd != user.loginId) ? true : "equals.username"
         }
         homepage url: true, nullable: true
+        posts() // no validation but these empty method calls do
+        tags()  // affect the ordering of fields in scaffolding UI
         profile nullable: true
     }
 }

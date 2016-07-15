@@ -3,7 +3,7 @@ package com.grailsinaction
 class Profile {
 
     //User user // removed in favour of a 'belongsTo declaration
-    byte[] photo
+    byte[] photo        // byte[] type used for file upload
     String fullName
     String bio
     String homepage
