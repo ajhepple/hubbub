@@ -122,4 +122,22 @@ class UserIntegrationSpec extends Specification {
         then: "There is an appropriate password error code"
         fred.errors.getFieldError("password").code == "equals.username"
     }
+
+    def "Ensure a user can follow other users" () {
+    
+        given: "A set of baseline users" 
+        def joe = new User(loginId: 'joe', password: 'secret').save()
+        def jane = new User(loginId: 'jane', password: 'secret').save()
+        def jill = new User(loginId: 'jill', password: 'secret').save()
+    
+        when: "Joe follows Jand and Jill, and Jill follows Jane"
+        joe.addToFollowing(jane)
+        joe.addToFollowing(jill)
+        jill.addToFollowing(jane)
+    
+        then: "Following counts must be consistent"
+        2 == joe.following.size()
+        1 == jill.following.size()
+        0 == jane.following.size() //causes NullPointerException unless following is declared as an empty set.
+    }
 }
