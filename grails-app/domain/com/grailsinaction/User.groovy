@@ -28,4 +28,8 @@ class User {
         tags()  // affect the ordering of fields in scaffolding UI
         profile nullable: true
     }
+
+    String toString () { "[${loginId}] ${profile ? profile.displayString : ""}" }
+
+    String getDisplayString () { loginId }
 }
