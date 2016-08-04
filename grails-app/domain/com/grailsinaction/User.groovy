@@ -30,6 +30,7 @@ class User {
     }
 
     String toString () { "[${loginId}] ${profile ? profile.displayString : ""}" }
+    
+    String getDisplayString () { toString() }
 
-    String getDisplayString () { loginId }
 }

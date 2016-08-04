@@ -10,6 +10,13 @@ class UserController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
+    def search () {}
+
+    def results (String loginId) {
+        def users = User.where{loginId =~ "%${loginId}%"}.list()
+        [users: users, term: params.loginId, totalUsers: User.count()]
+    }
+
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         respond User.list(params), model:[userInstanceCount: User.count()]

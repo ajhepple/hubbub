@@ -18,5 +18,5 @@ class Post {
         content blank: false
     }
 
-    String getDisplayString () { content.take(10) }
+    String getDisplayString () { content.take(20) }
 }
