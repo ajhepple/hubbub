@@ -1,5 +1,9 @@
 package com.grailsinaction
 
+/**
+ * An application user is expected to be a third-party application
+ * that consumes the Hubbub API services.
+ */
 class ApplicationUser {
 
     String applicationName

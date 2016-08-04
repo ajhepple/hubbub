@@ -125,6 +125,7 @@
             sb << ' from="${' << cls.name << '.list()}"'
             sb << ' multiple="multiple"'
             sb << ' optionKey="id"'
+            sb << ' optionValue="displayString"'
             sb << ' size="5"'
             if (isRequired()) sb << ' required=""'
             sb << ' value="${' << "${domainInstance}?.${property.name}" << '*.id}"'

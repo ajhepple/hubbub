@@ -17,4 +17,6 @@ class Post {
     static constraints = {
         content blank: false
     }
+
+    String getDisplayString () { content.take(10) }
 }
