@@ -10,6 +10,8 @@ class BootStrap {
             test {
                 if(!Post.count()) createSampleData()
             }
+            production {
+            }
         }
     }
     
@@ -39,6 +41,11 @@ class BootStrap {
                         loginId: "frankie",
                         password: "testing",
                         profile: new Profile(fullName: "Frankie Goes to Hollywood", email: "frankie@nowhere.net"),
+                        dateCreated: now).save(failOnError: true)
+        def pansy = new User(
+                        loginId: "pansy",
+                        password: "testing",
+                        profile: new Profile(fullName: "Pansy Parkinson", email: "pansy@nowhere.net"),
                         dateCreated: now).save(failOnError: true)
         def sara = new User(
                         loginId: "sara",
@@ -84,6 +91,7 @@ class BootStrap {
         dillon.addToPosts(content: "Pilates is killing me as well")
         dillon.save(failOnError: true, flush: true)
 
+        pansy.addToFollowing(sara)
         // We have to update the 'dateCreated' field after the initial save to
         // work around Grails' auto-timestamping feature. Note that this trick
         // won't work for the 'lastUpdated' field.
