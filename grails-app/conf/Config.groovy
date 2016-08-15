@@ -118,4 +118,8 @@ log4j = {
            'org.springframework',
            'org.hibernate',
            'net.sf.ehcache.hibernate'
+
+    /* These two entries help to provide an insight into SQL generation */
+    //debug 'org.hibernate.SQL'
+    //trace 'org.hibernate.type.descriptor.sql.BasicBinder'
 }
