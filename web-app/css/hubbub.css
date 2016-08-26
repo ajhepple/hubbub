@@ -72,7 +72,7 @@ body {
     border: none;
 }
 
-#postContent {
+#post-content {
     margin: 1em;
     font-size: large;
     width: 90%;    
@@ -87,12 +87,12 @@ dd {
 }
 
 
-.postImage {
+.post-image {
     margin: 0.5em;
     float: left;
 }
 
-.postEntry {
+.post-entry {
     padding-top: 1em;
     padding-bottom: 1em;
     margin-left: 3em;
@@ -101,16 +101,16 @@ dd {
 
 }
 
-.postText a {
+.post-text a {
     font-weight: bold;
     text-decoration: none;
 }
 
-.postDate {
+.post-date {
     font-size: smaller;
 }
 
-.friendsThumbnails img {
+.friends-thumbnails img {
     margin: 4px;
 }
 
