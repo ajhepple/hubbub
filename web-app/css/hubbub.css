@@ -114,4 +114,12 @@ dd {
     margin: 4px;
 }
 
+.flash {
+    background: #FFD;
+    border: 1px solid black;
+    color: black;
+    padding: 1em;
+    margin: 1em;
+}
+
 .errors {}

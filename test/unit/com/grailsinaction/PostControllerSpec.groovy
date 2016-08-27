@@ -47,4 +47,61 @@ class PostControllerSpec extends Specification {
         then: "a 404 response is returned"
         response.status == 404
     }
+
+    def "Adding a valid new post to the timeline" () {
+        given: "A user with posts in the db"
+        User chuck = new User(
+                loginId: "chuck_norris",
+                password: "password").save(failOnError: true)
+    
+        and: "A loginId parameter"
+        params.id = chuck.loginId
+    
+        and: "Some content for the post"
+        params.content = "Chuck Norris can unit test entire applications with a single asssert."
+    
+        when: "addPost is invoked"
+        def model = controller.addPost()
+    
+        then: "our flash message and redirect confirms the success"
+        flash.message == "New post created"
+        response.redirectedUrl == "/post/timeline/${chuck.loginId}"
+        Post.countByUser(chuck) == 1
+    }
+
+    def "Atempting to add an empty post results in error" () {
+        given: "A user with posts in the db"
+        User chuck = new User(
+                loginId: "chuck_norris",
+                password: "password").save(failOnError: true)
+    
+        and: "A loginId parameter"
+        params.id = chuck.loginId
+    
+        and: "Empty content for the post"
+        params.content = ""
+    
+        when: "addPost is invoked"
+        def model = controller.addPost()
+    
+        then: "Our flash message and redirect confirms the error"
+        flash.message == "Invalid or empty post"
+        response.redirectedUrl == "/post/timeline/${chuck.loginId}"
+        Post.countByUser(chuck) == 0
+    }
+
+    def "Attempting to add a post to for invalid user" () {
+        given: "An invalid user id"
+        params.id = "non_existant"
+    
+        and: "A valid post content"
+        params.content = "A valid post."
+    
+        when: "addPost is invoked"
+        def model = controller.addPost()
+    
+        then: "An flash message is available and redirect to user index"
+        flash.message == "Invalid user"
+        response.redirectedUrl == "/user/index"
+    }
 }

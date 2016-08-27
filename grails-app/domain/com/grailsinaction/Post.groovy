@@ -9,7 +9,7 @@ class Post {
      * class maps to the database table */
     static mapping = {
         // ensures that all db queries return posts in a meaninful order
-        sort dateCreated: "desc" 
+        sort dateCreated: "asc" 
     }
 
     static belongsTo = [user: User]
