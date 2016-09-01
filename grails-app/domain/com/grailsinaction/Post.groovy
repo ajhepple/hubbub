@@ -9,7 +9,8 @@ class Post {
      * class maps to the database table */
     static mapping = {
         // ensures that all db queries return posts in a meaninful order
-        sort dateCreated: "asc" 
+        // *** Does not appear to be working in Grails 2.3.7 ***
+        sort dateCreated: "desc" 
     }
 
     static belongsTo = [user: User]

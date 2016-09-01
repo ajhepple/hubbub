@@ -104,4 +104,21 @@ class PostControllerSpec extends Specification {
         flash.message == "Invalid user"
         response.redirectedUrl == "/user/index"
     }
+
+    @spock.lang.Unroll  //allows use of where clause parameters in test name
+    def "Testing id of #suppliedId redirects to #expectedUrl" () {
+        given:
+        params.id = suppliedId
+    
+        when: "Controller is invoked"
+        controller.home()
+    
+        then:
+        response.redirectedUrl == expectedUrl
+    
+        where:
+        suppliedId      |       expectedUrl
+        'joe_cool'      |       '/post/timeline/joe_cool'
+        null            |       '/post/timeline/chuck_norris'
+    }
 }
