@@ -3,6 +3,7 @@ package com.grailsinaction
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
+import static grails.util.GrailsNameUtils.*
 
 /**
  * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
@@ -48,38 +49,36 @@ class PostControllerSpec extends Specification {
         response.status == 404
     }
 
-    def "Adding a valid new post to the timeline" () {
-        given: "A user with posts in the db"
-        User chuck = new User(
-                loginId: "chuck_norris",
-                password: "password").save(failOnError: true)
-    
-        and: "A loginId parameter"
-        params.id = chuck.loginId
-    
-        and: "Some content for the post"
-        params.content = "Chuck Norris can unit test entire applications with a single asssert."
-    
-        when: "addPost is invoked"
-        def model = controller.addPost()
-    
-        then: "our flash message and redirect confirms the success"
-        flash.message == "New post created"
-        response.redirectedUrl == "/post/timeline/${chuck.loginId}"
-        Post.countByUser(chuck) == 1
+    def "Adding a new post to the timeline using a mocked PostService" () {
+        given: "a mock post service"
+        def mockPostService = Mock(PostService)
+        1 * mockPostService.createPost(_, _) >> new Post(content: "Mock post")
+        controller.postService = mockPostService
+
+        when: "controller is invoked"
+        def result = controller.addPost("joe_cool", "Posting up a storm")
+
+        then: "redirected to timeline, flash message tells us all is well"
+        flash.message ==~ /Added new post: Mock.*/
+        response.redirectedUrl == '/post/timeline/joe_cool'
     }
 
-    def "Atempting to add an empty post results in error" () {
+    def "Attempting to add an empty post results in error" () {
         given: "A user with posts in the db"
         User chuck = new User(
                 loginId: "chuck_norris",
                 password: "password").save(failOnError: true)
     
+        and: "a mock PostService"
+        def mockPostService = Mock(PostService)
+        1 * mockPostService.createPost(_, null) >> { throw new PostException(message: "Invalid or empty post")}
+        controller.postService = mockPostService
+
         and: "A loginId parameter"
         params.id = chuck.loginId
     
         and: "Empty content for the post"
-        params.content = ""
+        params.content = null
     
         when: "addPost is invoked"
         def model = controller.addPost()
@@ -90,19 +89,24 @@ class PostControllerSpec extends Specification {
         Post.countByUser(chuck) == 0
     }
 
-    def "Attempting to add a post to for invalid user" () {
+    def "Attempting to add a post for invalid user" () {
         given: "An invalid user id"
         params.id = "non_existant"
     
-        and: "A valid post content"
+        and: "a mock PostService"
+        def mockPostService = Mock(PostService)
+        1 * mockPostService.createPost(_, _) >> { throw new PostException(message: "Invalid user")}
+        controller.postService = mockPostService
+
+        and: "some valid post content"
         params.content = "A valid post."
     
         when: "addPost is invoked"
         def model = controller.addPost()
     
-        then: "An flash message is available and redirect to user index"
+        then: "a flash message is available and redirect to invalid user's timeline"
         flash.message == "Invalid user"
-        response.redirectedUrl == "/user/index"
+        response.redirectedUrl == "/post/timeline/${params.id}"
     }
 
     @spock.lang.Unroll  //allows use of where clause parameters in test name
@@ -120,5 +124,12 @@ class PostControllerSpec extends Specification {
         suppliedId      |       expectedUrl
         'joe_cool'      |       '/post/timeline/joe_cool'
         null            |       '/post/timeline/chuck_norris'
+    }
+
+    void "Check that the Post service is available and has the expected name" () {
+        given: "A service class named PostService"
+
+        expect: "its property name should be postService"
+        getPropertyName('PostService') == 'postService'
     }
 }
