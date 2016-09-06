@@ -30,8 +30,7 @@ class UserController {
     def register () {
         if (request.method == "POST") {
             def user = new User(params)
-            if (user.validate()) {
-                user.save()
+            if (user.validate() && user.save()) {
                 flash.message = "Successfully Created User"
                 redirect(uri: '/')
             } else {
@@ -41,6 +40,21 @@ class UserController {
         }
     }
 
+    def register2 (UserRegistrationCommand urc) {
+        if (urc.hasErrors()) {
+            render view: "register", model: [user: urc]
+        } else {
+            def user = new User(urc.properties)
+            user.profile = new Profile(urc.properties)
+            if (user.validate() && user.save()) {
+                flash.message = "Welcome aboard, ${urc.fullName ?: urc.loginId}"
+                redirect(uri: '/')
+            } else {
+                flash.message = "Error Registering User"
+                return [user: user]
+            }
+        }
+    }
     def update () {
         // Get the logged-in user and attach it to this request's scope
         // TODO ** Not implemented yet **
@@ -60,5 +74,29 @@ class UserController {
         } else {
             response.sendError(404)
         }
+    }
+}
+
+class UserRegistrationCommand {
+    String loginId
+    String password
+    String passwordRepeat
+    byte[] photo
+    String fullName
+    String bio
+    String homepage
+    String email
+    String timezone
+    String country
+    String jabberAddress
+
+    static constraints = {
+        importFrom Profile
+        importFrom User
+    
+        passwordRepeat(nullable: false,
+                validator: { passwd2, urc ->
+                    return passwd2 == urc.password
+                })
     }
 }

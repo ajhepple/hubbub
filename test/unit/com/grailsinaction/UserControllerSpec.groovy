@@ -3,6 +3,7 @@ package com.grailsinaction
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
 import spock.lang.Specification
+import spock.lang.Unroll
 
 /**
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
@@ -37,6 +38,60 @@ class UserControllerSpec extends Specification {
         controller.register()
     
         then: "the user is created and the browser redirected"
+        response.redirectedUrl == '/'
+        User.count() == 1
+        Profile.count() == 1
+    }
+
+    @Unroll
+    def "Registration command object for #loginId validates correctly"() {
+    
+        given: "a mocked command object"
+        def urc = new UserRegistrationCommand()
+    
+        and: "a set of initial values from the spock test"
+        urc.loginId = loginId
+        urc.password = password
+        urc.passwordRepeat = passwordRepeat
+        urc.fullName = "Your Name Here"
+        urc.email = "someone@nowhere.net"
+    
+        when: "the validator is invoked"
+        def isValidRegistration = urc.validate()
+    
+        then: "the appropriate fields are flagged as errors"
+        isValidRegistration == anticipatedValid
+        urc.errors.getFieldError(fieldInError)?.code == errorCode
+    
+        where:
+        loginId | password      | passwordRepeat        | anticipatedValid      | fieldInError          | errorCode
+        "glen"  | "password"    | "no-match"            | false                 | "passwordRepeat"      | "validator.invalid"
+        "peter" | "password"    | "password"            | true                  | null                  | null
+        "thomas"| "short"       | "short"               | false                 | "password"            | "size.toosmall"
+        "freddy"| null          | null                  | false                 | "password"            | "nullable"
+        "freddy"| ""            | ""                    | false                 | "password"            | "blank"
+    }
+
+    def "Invoking the register action via a command object"() {
+    
+        given: "A configured command object"
+        def urc = new UserRegistrationCommand()
+        urc.with {
+            loginId = "glen_a_smith"
+            fullName = "Glen Smith"
+            email = "glen@example.com"
+            password = "password"
+            passwordRepeat = "password"
+        }
+    
+        and: "which has been validated"
+        urc.validate()
+    
+        when: "the register action is invoked"
+        controller.register2(urc)
+    
+        then: "the user is registered and the browser redirected"
+        !urc.hasErrors()
         response.redirectedUrl == '/'
         User.count() == 1
         Profile.count() == 1
