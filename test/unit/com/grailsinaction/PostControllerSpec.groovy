@@ -9,7 +9,7 @@ import static grails.util.GrailsNameUtils.*
  * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
  */
 @TestFor(PostController)
-@Mock([User,Post])
+@Mock([User,Post,LameSecurityFilters])
 class PostControllerSpec extends Specification {
 
     def setup() {
@@ -131,5 +131,15 @@ class PostControllerSpec extends Specification {
 
         expect: "its property name should be postService"
         getPropertyName('PostService') == 'postService'
+    }
+
+    def "Exercising security filter for unauthenticated user"() {
+        when:
+        withFilters(action: "addPost") {
+            controller.addPost("glen_a_smith", "A first post")
+        }
+        
+        then:
+        response.redirectedUrl == '/login/form'
     }
 }
