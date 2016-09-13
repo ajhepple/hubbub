@@ -75,6 +75,16 @@ class UserController {
             response.sendError(404)
         }
     }
+
+    // GET user/profile/$id
+    def profile(String id) {
+        def user = User.findByLoginId(id)
+        if (user) {
+            [profile: user.profile]
+        } else {
+            response.sendError(404)
+        }
+    }
 }
 
 class UserRegistrationCommand {
