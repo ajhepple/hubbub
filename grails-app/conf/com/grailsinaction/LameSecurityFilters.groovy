@@ -18,7 +18,7 @@ class LameSecurityFilters {
             after = { Map model ->
                 //We could augment the model here if we wished.
                 //Any additions will be available to the view.
-                //NB Avoid changing existing model values, this is bad practice
+                //NB Avoid changing existing model values, this is bad practice.
             }
             afterView = { 
                 log.debug "Finished running ${controllerName}/${actionName}"

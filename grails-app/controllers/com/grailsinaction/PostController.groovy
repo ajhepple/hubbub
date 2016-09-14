@@ -33,4 +33,14 @@ class PostController {
         }
         redirect(action: 'timeline', id: id)
     }
+
+    def personal () {
+        def user = session.user?.refresh()
+
+        if (user) {
+            render view: 'timeline', model: [user: user]
+        } else {
+            redirect(uri: '/login')
+        }
+    }
 }

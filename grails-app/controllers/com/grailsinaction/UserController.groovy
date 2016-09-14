@@ -58,7 +58,7 @@ class UserController {
     def update () {
         // Get the logged-in user and attach it to this request's scope
         // TODO ** Not implemented yet **
-        def user = session.user?.attach()
+        def user = session.user?.refresh()
 
         if (user) {
             // update the user with a blacklist technique

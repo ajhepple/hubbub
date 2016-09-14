@@ -60,7 +60,7 @@ class PostControllerSpec extends Specification {
 
         then: "redirected to timeline, flash message tells us all is well"
         flash.message ==~ /Added new post: Mock.*/
-        response.redirectedUrl == '/post/timeline/joe_cool'
+        response.redirectedUrl == '/users/joe_cool'
     }
 
     def "Attempting to add an empty post results in error" () {
@@ -85,7 +85,7 @@ class PostControllerSpec extends Specification {
     
         then: "Our flash message and redirect confirms the error"
         flash.message == "Invalid or empty post"
-        response.redirectedUrl == "/post/timeline/${chuck.loginId}"
+        response.redirectedUrl == "/users/${chuck.loginId}"
         Post.countByUser(chuck) == 0
     }
 
@@ -106,7 +106,7 @@ class PostControllerSpec extends Specification {
     
         then: "a flash message is available and redirect to invalid user's timeline"
         flash.message == "Invalid user"
-        response.redirectedUrl == "/post/timeline/${params.id}"
+        response.redirectedUrl == "/users/${params.id}"
     }
 
     @spock.lang.Unroll  //allows use of where clause parameters in test name
@@ -122,8 +122,8 @@ class PostControllerSpec extends Specification {
     
         where:
         suppliedId      |       expectedUrl
-        'joe_cool'      |       '/post/timeline/joe_cool'
-        null            |       '/post/timeline/chuck_norris'
+        'joe_cool'      |       '/users/joe_cool'
+        null            |       '/users/chuck_norris'
     }
 
     void "Check that the Post service is available and has the expected name" () {
