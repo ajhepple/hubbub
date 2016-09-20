@@ -587,3 +587,13 @@ a.skip {
 	position: absolute;
 	left: -9999px;
 }
+
+img.profile-picture {
+    margin: 3px 10px 10px 0px;
+    width: 60px;
+    float: left;
+}
+
+.profile img.profile-picture {
+    width: 200px;
+}

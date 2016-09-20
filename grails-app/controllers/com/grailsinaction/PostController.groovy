@@ -43,4 +43,9 @@ class PostController {
             redirect(uri: '/login')
         }
     }
+
+    def global () {
+        params.max = params.int('max', 6)  //default value 6 if max not present
+        [posts: Post.list(params), postCount: Post.count()]
+    }
 }

@@ -1,11 +1,16 @@
 package com.grailsinaction
 
+import org.codehaus.groovy.grails.core.io.ResourceLocator
+import org.springframework.core.io.Resource
+
 class PhotoUploadCommand {
     byte[] photo
     String loginId
 }
 
 class ImageController {
+
+    ResourceLocator grailsResourceLocator
 
     def upload(PhotoUploadCommand puc) {
         def user = User.findByLoginId(puc.loginId)
@@ -41,7 +46,9 @@ class ImageController {
             response.setContentLength(user.profile.photo.size())
             response.outputStream.write(user.profile.photo)
         } else {
-            response.sendError(404)
+            // render default anonymous image
+            final Resource image = grailsResourceLocator.findResourceForURI('/images/user-default-image.png')
+            render file: image.inputStream, contentType: 'image/png'
         }
     }
 }
