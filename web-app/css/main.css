@@ -206,28 +206,28 @@ fieldset,
 	border: none;
 }
 
-.property-list .fieldcontain {
+.property-list .input {
 	list-style: none;
 	overflow: hidden;
 	zoom: 1;
 }
 
-.fieldcontain {
+.input {
 	margin-top: 1em;
 }
 
-.fieldcontain label,
-.fieldcontain .property-label {
+.input label,
+.input .property-label {
 	color: #666666;
 	text-align: right;
 	width: 25%;
 }
 
-.fieldcontain .property-label {
+.input .property-label {
 	float: left;
 }
 
-.fieldcontain .property-value {
+.input .property-value {
 	display: block;
 	margin-left: 27%;
 }
