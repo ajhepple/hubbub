@@ -117,6 +117,12 @@
 					</g:each>
 				</ul>
 			</div>
+                        <hub:certainBrowser userAgent="Mozilla">
+                            <p>Best viewed in Internet Explorer.</p>
+                        </hub:certainBrowser>
+                        <hub:certainBrowser userAgent="Lynx">
+                            <p>Linux command line browser.</p>
+                        </hub:certainBrowser>
 		</div>
 	</body>
 </html>
