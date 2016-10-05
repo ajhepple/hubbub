@@ -66,7 +66,7 @@ class ImageController {
         response.outputStream.write(image)
     }
 
-    def tinyThumbnail(String id) {
+    def tiny(String id) {
         def image = imageService.getTinyThumbnail(id)
         response.setContentLength(image.size())
         response.outputStream.write(image)

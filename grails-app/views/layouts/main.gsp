@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title><g:layoutTitle default="Grails"/></title>
+        <title>Hubbub &raquo; <g:layoutTitle default="Welcome"/></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <g:external dir="images" file="apple-touch-icon-retina.png" rel="apple-touch-icon" sizes="114x114"/>
         <g:external dir="images" file="favicon.ico"/>
@@ -25,7 +25,13 @@
             <g:layoutBody/>
         </div>
         <div id="ft">
-            <div id="footerText">Hubbub - Social Networking on Grails</div>
+            <div id="footerText">Hubbub - Social Networking on Grails
+                <p><small>
+                    Version <g:meta name="app.version"/>
+                    on Grails <g:meta name="app.grails.version"/>
+                    <!-- change app version using $> grail set-version <version> -->
+                </small></p>
+            </div>
         </div>
         <r:layoutResources />
     </body>
