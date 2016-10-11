@@ -23,12 +23,7 @@
     </div>
 
     <div id="all-posts">
-        <g:each in="${user.posts}" var="post">
-            <div class="post-entry">
-                <div class="post-text">${post.content}</div>
-                <hub:dateFromNow class="post-date" date="${post.dateCreated}"/>
-            </div>
-        </g:each>
+        <g:render template="postEntry" collection="${user.posts}" var="post"/>
     </div>
 </body>
 </html>
