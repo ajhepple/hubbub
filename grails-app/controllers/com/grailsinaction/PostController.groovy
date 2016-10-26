@@ -4,6 +4,13 @@ class PostController {
     static scaffold = true
     static defaultAction = 'home'
 
+    // Navigation plugin config
+    // I'm not sure that this is the best place to configure a GUI menu! 
+    static navigation = [
+        [group: 'tabs', action: 'personal', title: 'My Timeline', order: 0],
+        [action: 'global', title: 'Global Timeline', order: 1]
+    ]
+
     PostService postService
 
     def home () {

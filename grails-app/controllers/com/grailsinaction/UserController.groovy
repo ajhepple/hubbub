@@ -4,6 +4,14 @@ class UserController {
 
     static scaffold = true
     
+    // Navigation plugin config
+    static navigation = [
+        [group:'tabs', action:'search', order: 90],
+        [action: 'advancedSearch', order: 95],
+        // isVisible accepts a boolean closure e.g. { isSignedIn() }
+        [action: 'register', order: 99, isVisible: { true }]
+    ]
+
     def search () {}
 
     def searchResults (String loginId) {

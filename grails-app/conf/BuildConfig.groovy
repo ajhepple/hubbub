@@ -70,8 +70,9 @@ grails.project.dependency.resolution = {
         //runtime ":cached-resources:1.1"
         //runtime ":yui-minify-resources:0.1.5"
 
-        // added by AJH to support the use of Twitter Bootstrap
+        // added by AJH for various User Interface purposes
         runtime ":twitter-bootstrap:3.3.5"
+        runtime ":navigation:1.3.2"     // controller menu generation
 
         // An alternative to the default resources plugin is the asset-pipeline plugin
         //compile ":asset-pipeline:1.6.1"

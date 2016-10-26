@@ -15,6 +15,7 @@
         <g:javascript library="application"/>		
         <r:require modules="bootstrap"/>
         <r:layoutResources />
+        <nav:resources/> <!-- CSS and Javascript(?) resoureces for the Navigation plugin -->
     </head>
     <body>
         <div id="hd">
@@ -32,6 +33,10 @@
                     <a class="nav-item" href="#">Advanced Search</a>
                     <a class="nav-item" href="#">Register</a>
                 </nav>
+            </div>
+            <div class="container">
+                <!-- alternative navigation menu that is controller configurable -->
+                <nav:render group="tabs"/>
             </div>
         </div>
 
