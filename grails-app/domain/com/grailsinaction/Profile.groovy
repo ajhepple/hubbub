@@ -11,6 +11,7 @@ class Profile {
     String timezone
     String country
     String jabberAddress
+    String skin
 
     static belongsTo = [user: User]
 
@@ -23,6 +24,7 @@ class Profile {
         country nullable: true
         timezone nullable: true
         jabberAddress email: true, nullable: true
+        skin nullable: true, blank: true, inList: ['blues', 'nighttime']
     }
 
     String toString () { "Profile of $fullName (id: $id)" }
