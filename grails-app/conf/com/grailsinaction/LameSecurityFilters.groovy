@@ -5,7 +5,7 @@ class LameSecurityFilters {
     def filters = {
 
         /* check session user for actions that require login */
-        secureActions(controller:'post', action:'(addPost|deletePost)') {
+        secureActions(controller:'post', action:'(addPost|deletePost|addPostAjax)') {
             before = {
                 if (params.impersonateId) {
                     session.user = User.findByLoginId(params.impersonateId)

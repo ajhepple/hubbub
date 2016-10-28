@@ -12,7 +12,7 @@ class User {
     static hasOne = [profile: Profile]
     static hasMany = [posts: Post, tags: Tag, following: User]
     static mapping = {
-        posts sort: 'dateCreated'
+        posts(sort: 'dateCreated', order: 'desc')
     }
     static constraints = {
         // note that blank: false is stronger than nullable: false

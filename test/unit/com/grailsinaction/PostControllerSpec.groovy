@@ -133,6 +133,7 @@ class PostControllerSpec extends Specification {
         getPropertyName('PostService') == 'postService'
     }
 
+    /** Testing the behavour of security filters defined in grails-app/conf */
     def "Exercising security filter for unauthenticated user"() {
         when:
         withFilters(action: "addPost") {
