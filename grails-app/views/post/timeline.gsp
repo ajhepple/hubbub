@@ -65,6 +65,11 @@
             if (visible) $('#spinner').show();
             else $('#spinner').hide();
         }
+        function addTinyUrl(data) {
+            var post = $("#ajax-post-content");
+            post.val(post.val() + data.urls.small);
+            $("#tiny-url input[name='fullUrl']").val('');
+        }
     </g:javascript>
 </body>
 </html>

@@ -72,4 +72,12 @@ class PostController {
         params.max = params.int('max', 6)  //default value 6 if max not present
         [posts: Post.list(params), postCount: Post.count()]
     }
+
+    def tinyUrl (String fullUrl) {
+        def longUrl = fullUrl?.encodeAsURL()
+        def tinyUrl = new URL("http://tinyurl.com/api-create.php?url=${longUrl}").text
+        render(contentType:"application/json") {
+            urls(small: tinyUrl, full: fullUrl)
+        }
+    }
 }
