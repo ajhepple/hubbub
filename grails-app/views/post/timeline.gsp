@@ -38,7 +38,34 @@
                     onLoading="showSpinner(true)"
                     onComplete="showSpinner(false)"/>
                 <g:img id="spinner" style="display:none" uri="/images/spinner.gif"/>
+
+                <br/>
+                <a href="#" id="show-hide-url" onclick="toggleTinyUrl(); return true;">
+                    Show TinyURL
+                </a>
+
             </g:form>
+
+            <div id="tiny-url" style="display:none;">
+                <g:formRemote name="tinyUrlForm" url="[action: 'tinyUrl']" onSuccess="addTinyUrl(data);">
+                    Tiny URL: <g:textField name="fullUrl"/>
+                    <g:submitButton name="submit" value="Make Tiny"/>
+                </g:formRemote>
+            </div>
+            <r:script disposition="head">
+            function toggleTinyUrl() {
+                if ($('#tiny-url').is(':visible')) {
+                    // Hide the Tiny URL form
+                    $('#tiny-url').slideUp(300);
+                    $('#show-hide-url').text('Show TinyUrl');
+                } else {
+                    // Show the Tiny URL form
+                    $('#tiny-url').slideDown(300);
+                    $('#show-hide-url').text('Hide TinyURL');
+                }
+            }
+            </r:script>
+
         </p>
     </div>
 
