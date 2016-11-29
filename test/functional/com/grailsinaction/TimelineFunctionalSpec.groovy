@@ -14,18 +14,33 @@ class TimelineFunctionalSpec extends GebReportingSpec {
         $("div#new-post h3").text() == "What is Phil Potts hacking on right now?"
     }
 
-    def "Submitting a new post" () {
+    def "Submitting a new (synchronous) post" () {
         given: "I log in and start at my timeline page"
         login "frankie", "testing"
-        go "users/phil"
+        go "users/frankie"
 
-        when: "I enter a new message and post it"
+        when: "I enter a new message and post it using the synchronous form"
         $("#post-content").value("This is a test post from Geb")
-        $("#new-post").find("input", type: "button").click()
+        $("#new-post").find("input", id: "post").click()
 
         then: "I see the new post in the timeline"
         waitFor {
-            $("div.post-text", text: "This is a test post from Geb").empty
+            $("div.post-text", text: "This is a test post from Geb")
+        }
+    }
+
+    def "Submitting a new (asynchronous) post" () {
+        given: "I log in and start at my timeline page"
+        login "frankie", "testing"
+        go "users/frankie"
+
+        when: "I enter a new message and post it using the ajax form"
+        $("#ajax-post-content").value("This is a test ajax post from Geb")
+        $("#new-post").find("input", id: "ajax-post").click()
+
+        then: "I see the new post in the timeline"
+        waitFor {
+            $("div.post-text", text: "This is a test ajax post from Geb")
         }
     }
 
