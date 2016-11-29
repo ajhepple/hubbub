@@ -11,22 +11,21 @@ class TimelineFunctionalSpec extends GebReportingSpec {
         go "users/phil"
 
         then: "the page displays Phil's full name"
-        //$("#newPost h3").text() == "What is Phil Potss hacking on right now?"
-        $("#newPost h3").text() == "What is Phil Potss hacking on right now?"
+        $("div#new-post h3").text() == "What is Phil Potts hacking on right now?"
     }
 
     def "Submitting a new post" () {
-        given "I log in and start at my timeline page"
+        given: "I log in and start at my timeline page"
         login "frankie", "testing"
         go "users/phil"
 
         when: "I enter a new message and post it"
-        $("#postContent").value("This is a test post from Geb")
-        $("#newPost").find("input", type: "button").click()
+        $("#post-content").value("This is a test post from Geb")
+        $("#new-post").find("input", type: "button").click()
 
         then: "I see the new post in the timeline"
         waitFor {
-            $("div.postText", text: "This is a test post from Geb").present
+            $("div.post-text", text: "This is a test post from Geb").empty
         }
     }
 
