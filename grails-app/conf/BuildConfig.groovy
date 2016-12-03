@@ -93,5 +93,8 @@ grails.project.dependency.resolution = {
         
         // For testing in chapter 9
         test ":geb:$gebVersion"
+
+        // For plugin installation in Chapter 10
+        compile ":mail:1.0.7"
     }
 }

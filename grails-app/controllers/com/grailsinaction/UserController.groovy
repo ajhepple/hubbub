@@ -3,6 +3,8 @@ package com.grailsinaction
 class UserController {
 
     static scaffold = true
+
+    def mailService
     
     // Navigation plugin config
     static navigation = [
@@ -92,6 +94,21 @@ class UserController {
         } else {
             response.sendError(404)
         }
+    }
+
+    def welcomeEmail () {
+        if (params.email) {
+            mailService.sendMail {
+                to params.email
+                subject "Welcome to Hubbub!"
+                text """
+                Hi, ${params.email}. Great to have you on board.
+                The Hubbub Team.
+                """
+            }
+            flash.message = "Welcome aboard, we have sent you a welcome email"
+        }
+        redirect(uri: "/")
     }
 }
 
