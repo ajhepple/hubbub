@@ -2,7 +2,7 @@ package com.grailsinaction
 
 class LoginController {
 
-    static defaultAction = 'logIn'
+    static defaultAction = 'form'
     
     def form(String id) {
         [loginId: id]

@@ -6,6 +6,14 @@ import spock.lang.Stepwise
 @Stepwise
 class TimelineFunctionalSpec extends GebReportingSpec {
 
+    def "Check that personal timeline redirects to login" () {
+        when: "we try to access the timeline page" 
+        via pages.PersonalTimelinePage
+    
+        then: "we are redirected to the login page"
+        at pages.LoginFormPage
+    }
+
     def "Check that timeline loads for user 'phil'"() {
         when: "we load phil's timeline"
         //go "users/phil"               //without using Geb pages
