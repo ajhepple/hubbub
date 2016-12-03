@@ -31,7 +31,7 @@
             AJAX form
             <g:form id="ajax-${params.id}">
                 <g:textArea id="ajax-post-content" name="content" rows="3" cols="50"/><br/>
-                <g:submitToRemote value="Post"
+                <g:submitToRemote value="Post" id="ajax-post"
                     url="[controller: 'post', action: 'addPostAjax']"
                     update="all-posts"
                     onSuccess="clearElement('ajax-post-content')"
