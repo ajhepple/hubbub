@@ -117,6 +117,15 @@
 					</g:each>
 				</ul>
 			</div>
+                        <div id="app-property-list" role="complementary">
+                            <h2>Application Properties:</h2>
+                            <dl>
+                                <g:each var="property" in="${grailsApplication.config.toProperties().sort {it.key}}">
+                                    <dt>${property.key}</dt>
+                                    <dd>${property.value}</dd>
+                                </g:each>
+                            </dl>
+                        </div>
                         <hub:certainBrowser userAgent="Mozilla">
                             <p>Best viewed in Internet Explorer.</p>
                         </hub:certainBrowser>

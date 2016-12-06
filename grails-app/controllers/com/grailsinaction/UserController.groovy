@@ -96,6 +96,7 @@ class UserController {
         }
     }
 
+    // GET user/welcome-Email?email="recipient@example.com"
     def welcomeEmail () {
         if (params.email) {
             mailService.sendMail {
