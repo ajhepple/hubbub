@@ -102,10 +102,13 @@ class UserController {
             mailService.sendMail {
                 to params.email
                 subject "Welcome to Hubbub!"
-                text """
-                Hi, ${params.email}. Great to have you on board.
-                The Hubbub Team.
-                """
+                // Explicitly define a GSP view (recommended), or ...
+                html view: "/user/welcomeEmail", model: [email: params.email]
+                // ... declare a view inline. 
+//                text """
+//                Hi, ${params.email}. Great to have you on board.
+//                The Hubbub Team.
+//                """
             }
             flash.message = "Welcome aboard, we have sent you a welcome email"
         }

@@ -103,6 +103,9 @@
 			</ul>
 		</div>
 		<div id="page-body" role="main">
+                    <g:if test="${flash.message}">
+                       <p class="flash"> ${flash.message} </p>
+                    </g:if>
 			<h1>Welcome to Grails</h1>
 			<p>Congratulations, you have successfully started your first Grails application! At the moment
 			   this is the default page, feel free to modify it to either redirect to a controller or display whatever
