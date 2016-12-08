@@ -97,16 +97,16 @@ class UserController {
     }
 
     // GET user/welcome-Email?email="recipient@example.com"
-    def welcomeEmail () {
-        if (params.email) {
+    def welcomeEmail (String email) {
+        if (email) {
             mailService.sendMail {
-                to params.email
+                to email
                 subject "Welcome to Hubbub!"
-                // Explicitly define a GSP view (recommended), or ...
-                html view: "/user/welcomeEmail", model: [email: params.email]
-                // ... declare a view inline. 
+                // Explicitly define a GSP view (recommended) ...
+                html view: "/user/welcomeEmail", model: [email: email]
+                // ... or declare a view inline. 
 //                text """
-//                Hi, ${params.email}. Great to have you on board.
+//                Hi, ${email}. Great to have you on board.
 //                The Hubbub Team.
 //                """
             }

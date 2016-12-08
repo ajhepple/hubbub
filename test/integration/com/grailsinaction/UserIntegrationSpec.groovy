@@ -9,6 +9,9 @@ import spock.lang.*
  */
 class UserIntegrationSpec extends Specification {
 
+    // Dumbster Spring bean
+    def dumbster
+
     def setup() {
     }
 
@@ -139,5 +142,27 @@ class UserIntegrationSpec extends Specification {
         2 == joe.following.size()
         1 == jill.following.size()
         0 == jane.following.size() //causes NullPointerException unless following is declared as an empty set.
+    }
+
+    def "Welcome email is generated and sent" () {
+
+        given: "An empty inbox"
+        dumbster.reset()
+
+        and: "a user controller and request params"
+        def userController = new UserController()
+        userController.params.email = "tester@email.com"
+
+        when: "A welcome email is sent"
+        //userController.welcomeEmail("tester@email.com")
+        userController.welcomeEmail()
+
+        then: "It appears in their inbox"
+        dumbster.getMessageCount() == 1
+        //def msg = dumbster.getMessages().first()
+        def msg = dumbster.messages.first()
+        msg.subject == "Welcome to Hubbub!"
+        msg.to == "tester@email.com"
+        msg.body =~ /The Hubbub Team/
     }
 }

@@ -89,13 +89,40 @@ grails.hibernate.pass.readonly = false
 // configure passing read-only to OSIV session by default, requires "singleSession = false" OSIV mode
 grails.hibernate.osiv.readonly = false
 
+
 environments {
     development {
         grails.logging.jul.usebridge = true
+
+        // Mail plugin configuration for gmail
+        // See also ~/.grails/hubbub-config.groovy for credentials
+        //
+        // NB These configuration settings are deliberately isolated
+        // from those of the test environment as Dumbster does not
+        // override them all.
+        grails {
+            mail {
+                host = "smtp.gmail.com"
+                port = 465
+                props = ["mail.smtp.auth":"true",
+                         "mail.smtp.socketFactory.port":"465",
+                         "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+                         "mail.smtp.socketFactory.fallback":"false"]
+            }
+        }
+        grails.mail.default.from = "Hubbub <sailingbye@gmail.com>"
+
     }
     production {
         grails.logging.jul.usebridge = false
         // TODO: grails.serverURL = "http://www.changeme.com"
+        
+        // TODO: Production mail configuration 
+    }
+    test {
+        // Use the Dumbster plugin as a mock mail server for testing AJH Ch.10
+        dumbster.enabled = true
+        grails.mail.host = "127.0.0.1"
     }
 }
 
@@ -124,18 +151,3 @@ log4j = {
     //trace 'org.hibernate.type.descriptor.sql.BasicBinder'
 }
 
-// Mail plugin configuration
-grails {
-    mail {
-        host = "smtp.gmail.com"
-        port = 465
-        props = ["mail.smtp.auth":"true",
-                 "mail.smtp.socketFactory.port":"465",
-                 "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
-                 "mail.smtp.socketFactory.fallback":"false"]
-//        default {
-//            from = "Hubbub <sailingbye@gmail.com>"
-//        }
-    }
-}
-grails.mail.default.from = "Hubbub <sailingbye@gmail.com>"
