@@ -1,5 +1,7 @@
 package com.grailsinaction
 
+import grails.plugin.cache.*
+
 class PostController {
     static scaffold = true
     static defaultAction = 'home'
@@ -31,6 +33,8 @@ class PostController {
         }
     }
 
+    // Adding a new post means that a cached timeline must be evicted
+    @CacheEvict(value='userTimeline', key='#session.user.loginId')
     def addPost (String id, String content) {
         try {
             def newPost = postService.createPost(id,content)
@@ -41,6 +45,8 @@ class PostController {
         redirect(action: 'timeline', id: id)
     }
 
+    // Adding a new post means that a cached timeline must be evicted
+    @CacheEvict(value='userTimeline', key='#session.user.loginId')
     def addPostAjax (String id, String content) {
         try {
             def newPost = postService.createPost(
@@ -58,6 +64,8 @@ class PostController {
         }
     }
 
+    // Cache this action using the userTimeline cache and a custom key
+    @CachePut(value='userTimeline', key='#session.user.loginId')
     def personal () {
         def user = session.user?.refresh()
 
@@ -68,6 +76,7 @@ class PostController {
         }
     }
 
+    @Cacheable('globalTimeline')
     def global () {
         params.max = params.int('max', 6)  //default value 6 if max not present
         [posts: Post.list(params), postCount: Post.count()]
