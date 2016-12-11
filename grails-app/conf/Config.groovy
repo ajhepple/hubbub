@@ -151,3 +151,23 @@ log4j = {
     //trace 'org.hibernate.type.descriptor.sql.BasicBinder'
 }
 
+// Example config of caching that the ehcache plugin allows
+// See http://grails-plugins.github.com/grails-cashe-ehcache
+grails.cache.config = {
+    defaultCache {
+        maxElementsInMemory 10000
+        external false
+        timeToIdleSeconds 120
+        timeToLiveSeconds 120
+        overflowToDisk true     // assumes disk availability!
+        maxElementsOnDisk 100000000
+        diskPersistent false
+        diskExpiryThreadIntervalSeconds 120
+        memoryStoreEvictionPolilcy 'LRU'
+    }
+
+    cache {
+        name 'myDailyCache'
+        timeToLiveSeconds 60*60*24
+    }
+}

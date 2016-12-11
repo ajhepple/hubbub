@@ -67,6 +67,12 @@ grails.project.dependency.resolution = {
         // plugins for the compile step
         compile ":scaffolding:2.0.2"
         compile ':cache:1.1.1'
+        // Section 10.3.3 Extending the core caching configuration
+        // (this is for sophisticated caching configuration only)
+        // Note that this declaration makes the declaration of the 
+        // core cache plugin, above, redundant as the ehcache plugin
+        // declares a dependency on the core cache plugin.
+        compile ":cache-ehcache:1.0.0"
 
         // plugins needed at runtime but not for compilation
         runtime ":hibernate:3.6.10.9" // or ":hibernate4:4.3.4"
