@@ -22,6 +22,7 @@ class PostController {
         redirect(action: 'timeline', params: params)
     }
 
+    @CachePut(value='userTimeline')     // default cache key is concatonation of parameters
     def timeline (String id) {
         def user = User.findByLoginId(id)
         if (!user) {
@@ -34,7 +35,7 @@ class PostController {
     }
 
     // Adding a new post means that a cached timeline must be evicted
-    @CacheEvict(value='userTimeline', key='#session.user.loginId')
+    @CacheEvict(value='userTimeline', key='#id')
     def addPost (String id, String content) {
         try {
             def newPost = postService.createPost(id,content)
@@ -46,7 +47,7 @@ class PostController {
     }
 
     // Adding a new post means that a cached timeline must be evicted
-    @CacheEvict(value='userTimeline', key='#session.user.loginId')
+    @CacheEvict(value='userTimeline', key='#id')
     def addPostAjax (String id, String content) {
         try {
             def newPost = postService.createPost(
@@ -65,7 +66,9 @@ class PostController {
     }
 
     // Cache this action using the userTimeline cache and a custom key
-    @CachePut(value='userTimeline', key='#session.user.loginId')
+    // ** I later concluded that the session object is not avialable
+    // ** in the context of this cache annotaion.
+    // @CachePut(value='userTimeline', key='#session.user.loginId')
     def personal () {
         def user = session.user?.refresh()
 
