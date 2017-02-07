@@ -171,3 +171,8 @@ grails.cache.config = {
         timeToLiveSeconds 60*60*24
     }
 }
+
+// Chapter 10.4 Database Migration
+// Configure auto migration on application start up
+grails.plugin.databasemigration.updateOnStart = true
+grails.plugin.databasemigration.updateOnStartFileNames = ['changelog.groovy']
