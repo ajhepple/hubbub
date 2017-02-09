@@ -118,6 +118,11 @@ environments {
         // TODO: grails.serverURL = "http://www.changeme.com"
         
         // TODO: Production mail configuration 
+
+        // Chapter 10.4 Database Migration
+        // Configure auto migration on application start up
+        grails.plugin.databasemigration.updateOnStart = true
+        grails.plugin.databasemigration.updateOnStartFileNames = ['changelog.groovy']
     }
     test {
         // Use the Dumbster plugin as a mock mail server for testing AJH Ch.10
@@ -172,7 +177,3 @@ grails.cache.config = {
     }
 }
 
-// Chapter 10.4 Database Migration
-// Configure auto migration on application start up
-grails.plugin.databasemigration.updateOnStart = true
-grails.plugin.databasemigration.updateOnStartFileNames = ['changelog.groovy']

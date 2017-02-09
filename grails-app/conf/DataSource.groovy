@@ -32,7 +32,6 @@ environments {
     }
     production {
         dataSource {
-            //dbCreate = "update"
             dbCreate = "none"   // Chapter 10.4 DB Migration
             url = "jdbc:h2:prodDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
             properties {
