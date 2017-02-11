@@ -40,6 +40,10 @@ grails.project.dependency.resolution = {
         mavenLocal()
         grailsCentral()
         mavenCentral()
+
+        // For the Searchable plugin's 'compass' dependency
+        mavenRepo "http://repo.grails.org/grails/core"
+
         // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
@@ -58,6 +62,10 @@ grails.project.dependency.resolution = {
         test "org.gebish:geb-spock:$gebVersion"
         test "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
         test "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion" 
+
+        // For Searchable plugin
+        compile "org.apache.lucene:lucene-spellchecker:2.4.1"
+        compile "org.apache.lucene:lucene-highlighter:2.4.1"
     }
 
     plugins {
@@ -103,5 +111,11 @@ grails.project.dependency.resolution = {
         // For email functionality in Chapter 10
         compile ":mail:1.0.7"
         test ":dumbster:0.2"
+
+        // For full-text search in Chapter 10
+        // NB The core grails maven repository at http://repo.grails.org
+        // is declared above, along with compilation dependencies for the
+        // Lucene spellchecker and highlighter
+        compile ':searchable:0.6.6'
     }
 }

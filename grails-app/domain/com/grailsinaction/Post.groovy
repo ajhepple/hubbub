@@ -18,6 +18,7 @@ class Post {
     static constraints = {
         content blank: false
     }
+    static searchable = true    // i.e. using the searchable plugin
 
     String getDisplayString () { content.take(20) }
 }

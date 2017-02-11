@@ -28,6 +28,7 @@ class User {
         tags()  // affect the ordering of fields in scaffolding UI
         profile nullable: true
     }
+    static searchable = true    // i.e. with the searchable plugin
 
     String toString () { "[${loginId}] ${profile ? profile.displayString : ""}" }
     

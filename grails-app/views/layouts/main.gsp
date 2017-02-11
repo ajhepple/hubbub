@@ -8,14 +8,11 @@
         <g:external dir="images" file="apple-touch-icon-retina.png" rel="apple-touch-icon" sizes="114x114"/>
         <g:external dir="images" file="favicon.ico"/>
         <g:external dir="images" file="apple-touch-icon.png" rel="apple-touch-icon"/>
-        <g:external dir="css" file="mobile.css"/>
-        <g:external dir="css" file="main.css"/>
-        <g:external dir="css" file="hubbub.css"/>
         <g:layoutHead/>
         <g:javascript library="application"/>		
         <r:require modules="bootstrap"/>
         <r:layoutResources />
-        <nav:resources/> <!-- CSS and Javascript(?) resoureces for the Navigation plugin -->
+        <nav:resources/> <!-- CSS and Javascript(?) resources for the Navigation plugin -->
     </head>
     <body>
         <div id="hd">
