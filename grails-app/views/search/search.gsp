@@ -15,17 +15,6 @@
         <g:if test="${searchResult}">
             Displaying results
             <b>${searchResult.offset+1}-${Math.min(searchResult.offset + searchResult.max, searchResult.total)}</b> of <b>${searchResult.total}</b>:
-            <g:set var ="totalPages" value="${Math.ceil(searchResult.total/searchResult.max)}"/>
-            <g:if test="${totalPages == 1}">
-                <span class="currentStep">1</span>
-            </g:if>
-            <g:else>
-                %{-- <g:paginate controller="search" action="search" 
-                        params="[q: params.q]" 
-                        total="${searchResult.total}" 
-                        prev="&lt; previous" next="next &gt;"/> --}%
-            </g:else>
-            <p/>
         </g:if>
         <g:if test="${searchResult?.results}">
             <g:each var="result" in="${searchResult.results}" status="hitNum">
@@ -42,6 +31,19 @@
                     </div> 
                 </div>
             </g:each>
+        </g:if>
+        <g:if test="${searchResult}">
+            <g:set var ="totalPages" value="${Math.ceil(searchResult.total/searchResult.max)}"/>
+            <g:if test="${totalPages == 1}">
+                <span class="currentStep">Page 1 of 1</span>
+            </g:if>
+            <g:else>
+                <g:paginate controller="search" action="search" 
+                        params="[q: params.q]" 
+                        total="${searchResult.total}" 
+                        prev="&lt; previous" next="next &gt;"/>
+            </g:else>
+            <p/>
         </g:if>
     </body>
 </html>

@@ -177,3 +177,5 @@ grails.cache.config = {
     }
 }
 
+// Fix grails taglib <g:paginate/> to work with Twitter bootstap CSS
+grails.plugins.twitterbootstrap.fixtaglib = true
