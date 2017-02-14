@@ -6,12 +6,29 @@
     </head>
     <body>
         <h1>Search</h1>
+        
+        <!-- Input form -->
         <g:form>
             <g:textField name="q" value="${params.q}"/>
             <g:select name="max" from="${[1,5,10,50]}" value="${params.max ?: 10}"/>
             <g:submitButton name="search" value="Search"/>
         </g:form>
         <hr/>
+
+        <!-- Searchable suggest-query -->
+        <g:if test="${searchResult?.suggestedQuery}">
+        <%@ page import="grails.plugin.searchable.internal.util.StringQueryUtils" %>
+        <p>
+            Did you mean
+            <g:link controller="search" action="search"
+                    params="[q: searchResult.suggestedQuery]">
+                ${raw(StringQueryUtils.highlightTermDiffs(params.q.trim(),
+                        searchResult.suggestedQuery))}
+            </g:link>?
+        </p>
+        </g:if>
+
+        <!-- Search results -->
         <g:if test="${searchResult}">
             Displaying results
             <b>${searchResult.offset+1}-${Math.min(searchResult.offset + searchResult.max, searchResult.total)}</b> of <b>${searchResult.total}</b>:
@@ -32,6 +49,8 @@
                 </div>
             </g:each>
         </g:if>
+
+        <!-- Pagination of search results -->
         <g:if test="${searchResult}">
             <g:set var ="totalPages" value="${Math.ceil(searchResult.total/searchResult.max)}"/>
             <g:if test="${totalPages == 1}">

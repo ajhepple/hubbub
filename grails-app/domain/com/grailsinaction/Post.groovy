@@ -18,7 +18,9 @@ class Post {
     static constraints = {
         content blank: false
     }
-    static searchable = true    // i.e. using the searchable plugin
+    static searchable = {
+        spellCheck "include"    // allowing use of the suggest-query option
+    }
 
     String getDisplayString () { content.take(20) }
 }

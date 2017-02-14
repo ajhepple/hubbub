@@ -14,6 +14,10 @@ class SearchController {
         def query = params.q
         if (!query) return [:]
         try {
+            // add suggest-query for misspelled terms (see Post.groovy also)
+            params.suggestQuery = true
+            
+            // define a highlighting closure
             params.withHighlighter = { highlighter, index, sr ->
                 // lazy-init the list of highlighted search results
                 if (!sr.highlights) {
@@ -24,6 +28,9 @@ class SearchController {
                 def matchedFragment = highlighter.fragment("content")
                 sr.highlights[index] = "..." + (matchedFragment ?: "") + "..."
             }
+
+            // Finaly, perform search using one of the overloaded methods
+            // provided by the Searchable plugin;
             // DomainClass#search(String query, Map options)
             return [searchResult: Post.search(query, params)]
         } catch (e) {
