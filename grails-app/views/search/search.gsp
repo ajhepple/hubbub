@@ -28,7 +28,7 @@
             <p/>
         </g:if>
         <g:if test="${searchResult?.results}">
-            <g:each var="result" in="${searchResult.results}">
+            <g:each var="result" in="${searchResult.results}" status="hitNum">
                 <div class="search-post">
                     <div class="search-from">
                         From
@@ -38,7 +38,7 @@
                         </g:link>
                     </div>
                     <div class="search-content">
-                        ${result.content}
+                        ${raw(searchResult.highlights[hitNum])}
                     </div> 
                 </div>
             </g:each>
