@@ -19,7 +19,9 @@ class Post {
         content blank: false
     }
     static searchable = {
-        spellCheck "include"    // allowing use of the suggest-query option
+        spellCheck "include"    // Allowing use of the suggest-query option.
+        user(component: true)   // Allow searching based upon User criteria;
+                                // adds user fields to the Post index table.
     }
 
     String getDisplayString () { content.take(20) }

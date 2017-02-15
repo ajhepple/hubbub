@@ -18,4 +18,9 @@ class LoginController {
             redirect action: "form"
         }
     }
+
+    def signOut () {
+        session.user = null
+        redirect url: "/"
+    }
 }

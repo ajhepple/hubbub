@@ -5,7 +5,16 @@ class BootStrap {
     def init = { servletContext ->
         environments {
             development {
-                if(!Post.count()) createSampleData()
+                if(!Post.count()) {
+                    createSampleData()
+                    indexDomainClasses()// Index the searchable domain classes.
+                                        // This is only necessary due to a
+                                        // mysterious clash between Searchable
+                                        // and Hibernate that prevents mirroring
+                                        // of indexes to domain classes.
+                                        // It is very much a workaround.
+                                        // See also Searchable.groovy config.
+                }
             }
             test {
                 if(!Post.count()) createSampleData()
@@ -16,6 +25,18 @@ class BootStrap {
     }
     
     def destroy = {
+    }
+    
+    /*
+     * Due to the disabling of Searchable's mirroring feature, we must manually
+     * create the indexes that Searchable uses.
+     * Searchable adds #index, #unindex and #reindex to domain classes.
+     * SearchableService provides #rebuildSpellingSuggestions, #startMirroring
+     * and #stopMirroring.
+     */
+    private indexDomainClasses () {
+        Post.index()
+        User.index()
     }
 
     private createSampleData () {

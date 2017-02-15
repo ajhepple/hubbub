@@ -29,11 +29,17 @@ class SearchController {
                 sr.highlights[index] = "..." + (matchedFragment ?: "") + "..."
             }
 
+            // apply restriction to logged-in user's posts only, if necessary
+            if (params.justMine) {
+                query += " loginId:${session.user.loginId}"
+            }
+
             // Finaly, perform search using one of the overloaded methods
             // provided by the Searchable plugin;
             // DomainClass#search(String query, Map options)
             return [searchResult: Post.search(query, params)]
         } catch (e) {
+            println e.stackTrace()
             return [searchError: true]
         }
     }

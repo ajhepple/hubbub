@@ -10,6 +10,10 @@
         <!-- Input form -->
         <g:form>
             <g:textField name="q" value="${params.q}"/>
+            <g:if test="${session.user}">
+                My posts only:
+                <g:checkBox name="justMine" value="${params.justMine}"/>
+            </g:if>
             <g:select name="max" from="${[1,5,10,50]}" value="${params.max ?: 10}"/>
             <g:submitButton name="search" value="Search"/>
         </g:form>
@@ -48,6 +52,9 @@
                     </div> 
                 </div>
             </g:each>
+        </g:if>
+        <g:if test="${searchError}">
+            <p class="error-message">Search error</p>
         </g:if>
 
         <!-- Pagination of search results -->
