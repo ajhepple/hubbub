@@ -92,4 +92,30 @@ class PostController {
             urls(small: tinyUrl, full: fullUrl)
         }
     }
+
+    // An action for searching posts by tags which uses a command object.
+    // The command object demonstrates parameter constraints which provide
+    // security against malicious attack via POST data manipulation.
+    //
+    // TODO Implement a view for this action.
+    def tagSearch(TagSearchCommand cmd) {
+        if (cmd.hasErrors()) {
+            render status: 400, text: "Invalid search parameters"
+            return
+        }
+        def results = Post.findAllByTag(cmd.tag, [max: cmd.max])
+    }
+}
+
+class TagSearchCommand {
+    String tag
+    int max
+    int offset
+    
+    // Recommended way to apply validation checks to URL parameters.
+    // Particularly if the command object can be re-used by multiple actions.
+    static constraints = {
+        max min: 0, max: 500
+        offset min: 0, max: 500
+    }
 }
