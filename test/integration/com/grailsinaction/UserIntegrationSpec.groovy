@@ -21,7 +21,7 @@ class UserIntegrationSpec extends Specification {
     void "Saving our first user to the database"() {
         
         given: "A brand new user"
-        def joe = new User(loginId: 'joe', password: 'secret',
+        def joe = new User(loginId: 'joe', passwordHash: 'secret',
                 homepage: 'http://www.grailsinaction.com')
 
         when: "the user is saved"
@@ -34,39 +34,41 @@ class UserIntegrationSpec extends Specification {
     }
 
     void "Password should not be blank" () {
-        given: "A brand new user"
-        def fred = new User(loginId: 'fred', password: '', homepage: '')
 
-        when: "the user is saved"
-        fred.save()
-
-        then: "it should not be saved successfully."
-        fred.errors.errorCount >= 0
-        fred.errors.getFieldError('password') != null   // cannot call fieldError('password') as this only
-                                                        // is not a 'property' i.e. method without arguments
-        fred.id == null
+        /* The use of spring-security plugin in Chapter 11 affected this test */
+//        given: "A brand new user"
+//        def fred = new User(loginId: 'fred', passwordHash: '', homepage: '')
+//
+//        when: "the user is saved"
+//        fred.save()
+//
+//        then: "it should not be saved successfully."
+//        fred.errors.errorCount >= 0
+//        fred.errors.getFieldError('passwordHash') != null   // cannot call fieldError('password') as this only
+//                                                        // is not a 'property' i.e. method without arguments
+//        fred.id == null
     }
 
     void "Updating a saved user changes its properties" () {
 
         given: "An existing user"
-        def existingUser = new User(loginId: 'joe', password: 'secret',
+        def existingUser = new User(loginId: 'joe', passwordHash: 'secret',
                 homepage: 'http://www.grailsinaction.com')
         existingUser.save(failOnError: true)
 
         when: "A property is changed"
         def foundUser = User.get(existingUser.id)
-        foundUser.password = 'sesame'
+        foundUser.loginId = 'jane'
         foundUser.save(failOnError: true)
 
         then: "the change is reflected in the database"
-        User.get(existingUser.id).password == 'sesame'
+        User.get(existingUser.id).loginId == 'jane'
     }
 
     void "Deleting an existing user removes it from the database" () {
 
         given: "An existing user"
-        def user = new User(loginId: 'joe', password: 'secret',
+        def user = new User(loginId: 'joe', passwordHash: 'secret',
                 homepage: 'http://www.grailsinaction.com')
         user.save(failOnError: true)
 
@@ -81,15 +83,16 @@ class UserIntegrationSpec extends Specification {
     def "Saving a user with invalid properties causes an error" () {
         
         given: "A user which fails several field validations"
-        def user = new User(loginId: 'joe', password: 'tiny', homepage: 'not-a-url')
+        def user = new User(loginId: 'joe', passwordHash: 'tiny', homepage: 'not-a-url')
     
         when: "The user is validated"
         user.validate()
 
         then:
         user.hasErrors()
-        "size.toosmall" == user.errors.getFieldError("password").code
-        "tiny" == user.errors.getFieldError("password").rejectedValue
+        // No longer true since chapter 11
+        //"size.toosmall" == user.errors.getFieldError("passwordHash").code
+        //"tiny" == user.errors.getFieldError("passwordHash").rejectedValue
         "url.invalid" == user.errors.getFieldError("homepage").code
         "not-a-url" == user.errors.getFieldError("homepage").rejectedValue
         !user.errors.getFieldError("loginId")
@@ -98,40 +101,41 @@ class UserIntegrationSpec extends Specification {
     def "Recovering from a failed save by fixing invalid properties" () {
         
         given: "A uer that has invalid properties" 
-        def chuck = new User(loginId: 'chuck', password: 'tiny', homepage: 'not-a-url')
-        assert chuck.save() == null
-        assert chuck.hasErrors()
+        def joe = new User(loginId: 'me', passwordHash: 'tiny', homepage: 'not-a-url')
+        assert joe.save() == null
+        assert joe.hasErrors()
 
         when: "We fix the invalid properties"
-        chuck.clearErrors()
-        assert !chuck.hasErrors()
-        chuck.password = "fistcuff"
-        chuck.homepage = "http://www.chucknorrisfacts.com"
-        chuck.validate()
+        joe.clearErrors()
+        assert !joe.hasErrors()
+        joe.loginId = "joe"
+        joe.homepage = "http://www.joessuperiorfacts.com"
+        joe.validate()
 
         then: "The user saves and validates."
-        !chuck.hasErrors()
-        chuck.save()
+        !joe.hasErrors()
+        joe.save()
     }
 
     def "Saving a user with similar username and password causes an error" () {
     
-        given: "A user with similar username and password"
-        def fred = new User(loginId: 'freddy', password: 'freddy', homepage: 'http://www.fred.com')
-    
-        when: "The user is saved"
-        fred.save()
-    
-        then: "There is an appropriate password error code"
-        fred.errors.getFieldError("password").code == "equals.username"
+        /* The introduction of spring-security in Chapter 11 affected this test */
+//        given: "A user with similar username and password"
+//        def fred = new User(loginId: 'freddy', passwordHash: 'freddy', homepage: 'http://www.fred.com')
+//    
+//        when: "The user is saved"
+//        fred.save()
+//    
+//        then: "There is an appropriate password error code"
+//        fred.errors.getFieldError("passwordHash").code == "equals.username"
     }
 
     def "Ensure a user can follow other users" () {
     
         given: "A set of baseline users" 
-        def joe = new User(loginId: 'joe', password: 'secret').save()
-        def jane = new User(loginId: 'jane', password: 'secret').save()
-        def jill = new User(loginId: 'jill', password: 'secret').save()
+        def joe = new User(loginId: 'joe', passwordHash: 'secret').save()
+        def jane = new User(loginId: 'jane', passwordHash: 'secret').save()
+        def jill = new User(loginId: 'jill', passwordHash: 'secret').save()
     
         when: "Joe follows Jand and Jill, and Jill follows Jane"
         joe.addToFollowing(jane)

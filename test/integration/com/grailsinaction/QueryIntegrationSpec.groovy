@@ -15,6 +15,16 @@ class QueryIntegrationSpec extends Specification {
     def cleanup() {
     }
 
+    void "Simple login ID search" () {
+        when: "A user is selected by loginId"
+        def query = User.where {loginId == "frankie"}
+        def user = query.find()
+    
+        then: "The user with that username is returned"
+        user.profile.email == "frankie@nowhere.net"
+    }
+
+    /*
     void "Simple property comparison" () {
         when: "Users are selected by a simple password match"
         def users = User.where {password == "testing"}.list(sort: "loginId")
@@ -31,6 +41,7 @@ class QueryIntegrationSpec extends Specification {
         then: "The matching loginIds are returned"
         users*.loginId == ["dillon", "frankie", "sara"]
     }
+    */
 
     void "Query on association" () {
         when: "The 'following' collection is queried"
@@ -50,7 +61,7 @@ class QueryIntegrationSpec extends Specification {
         }.list(sort: "loginId", order: "desc")
     
         then: "The users created within the specified date range are returned"
-        users*.loginId == ["phil", "peter", "pansy", "glen", "frankie", "chuck_norris"]
+        users*.loginId == ["phil", "peter", "pansy", "glen", "frankie", "chuck_norris", "admin"]
     }
 
     void "Retrieve a single instance" () {
@@ -58,6 +69,6 @@ class QueryIntegrationSpec extends Specification {
         def user = User.where {loginId == "phil"}.get()
         
         then: "A single instance is returned"
-        user.password == "thomas"
+        user.loginId == "phil"
     }
 }

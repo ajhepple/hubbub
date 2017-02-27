@@ -22,7 +22,7 @@ class PostControllerSpec extends Specification {
         given: "A user with posts in the db"
         User chuck = new User(
                 loginId: "chuck_norris",
-                password: "password")
+                passwordHash: "asdfjkljk")
         chuck.addToPosts(new Post(content: "A first post"))
         chuck.addToPosts(new Post(content: "A second post"))
         chuck.save(failOnError: true)
@@ -67,7 +67,7 @@ class PostControllerSpec extends Specification {
         given: "A user with posts in the db"
         User chuck = new User(
                 loginId: "chuck_norris",
-                password: "password").save(failOnError: true)
+                passwordHash: "asdfjkljk").save(failOnError: true)
     
         and: "a mock PostService"
         def mockPostService = Mock(PostService)

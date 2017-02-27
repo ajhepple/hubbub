@@ -2,9 +2,14 @@ package com.grailsinaction
 
 class User {
 
-    // User properties (these will be automagically persisted by grails)
+    transient springSecurityService
+
     String loginId
-    String password
+    String passwordHash
+    boolean enabled = true
+    boolean accountExpired
+    boolean accountLocked
+    boolean passwordExpired
     String homepage
     Date dateCreated
     Set following = []
@@ -19,24 +24,27 @@ class User {
         // (as nullable: false does not prevent an empty string)
         // and that all domain object properties have nullable: false
         // by default.
-        loginId blank: false, size: 3..20, unique: true
-        password size: 6..8, blank: false, validator: { pwd, user ->
-             (pwd != user.loginId) ? true : "equals.username"
-        }
+        loginId blank: false, size: 3..20, unique: true        
         homepage url: true, nullable: true
-        posts() // no validation but these empty method calls do
+        posts() // no validation but these empty methods calls to
         tags()  // affect the ordering of fields in scaffolding UI
         profile nullable: true
     }
     // static searchable = true    // i.e. with the searchable plugin (simplest way to declare)
     static searchable = {
-        except = ['password']   // index all fields except password
+        except = ['passwordHash']    // index all fields except passwordHash
         // alternatively, using the 'only' declaration
         //only = ['loginId','homepage','following']
     }
 
+    static transients = ['springSecurityService']
+
     String toString () { "[${loginId}] ${profile ? profile.displayString : ""}" }
-    
+
     String getDisplayString () { toString() }
+
+    Set<Role> getAuthorities() {
+        UserRole.findAllByUser(this)*.role
+    }
 
 }

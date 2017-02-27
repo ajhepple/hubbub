@@ -2,6 +2,8 @@ import com.grailsinaction.*
 
 class BootStrap {
 
+    def springSecurityService
+
     def init = { servletContext ->
         environments {
             development {
@@ -22,6 +24,9 @@ class BootStrap {
             production {
             }
         }
+
+        // Admin user is required for all environments
+        createAdminUserIfRequired()
     }
     
     def destroy = {
@@ -45,41 +50,41 @@ class BootStrap {
         def now = new Date()
         def chuck = new User(
                         loginId: "chuck_norris",
-                        password: "highkick",
+                        passwordHash: springSecurityService.encodePassword("highkick"),
                         profile: new Profile(fullName: "Chuck Norris", email: "chuck@nowhere.net"),
                         dateCreated: now).save(failOnError: true)
         def glen = new User(
                         loginId: "glen",
-                        password: "sheldon",
+                        passwordHash: springSecurityService.encodePassword("sheldon"),
                         profile: new Profile(fullName: "Glen Smith", email: "glen@nowhere.net"),
                         dateCreated: now).save(failOnError: true)
         def peter = new User(
                         loginId: "peter",
-                        password: "mandible",
+                        passwordHash: springSecurityService.encodePassword("mandible"),
                         profile: new Profile(fullName: "Peter Ledbrook", email: "peter@nowhere.net"),
                         dateCreated: now).save(failOnError: true)
         def frankie = new User(
                         loginId: "frankie",
-                        password: "testing",
+                        passwordHash: springSecurityService.encodePassword("testing"),
                         profile: new Profile(fullName: "Frankie Goes to Hollywood", email: "frankie@nowhere.net"),
                         dateCreated: now).save(failOnError: true)
         def pansy = new User(
                         loginId: "pansy",
-                        password: "testing",
+                        passwordHash: springSecurityService.encodePassword("testing"),
                         profile: new Profile(fullName: "Pansy Parkinson", email: "pansy@nowhere.net"),
                         dateCreated: now).save(failOnError: true)
         def sara = new User(
                         loginId: "sara",
-                        password: "crikey",
+                        passwordHash: springSecurityService.encodePassword("crikey"),
                         profile: new Profile(fullName: "Sara Miles", email: "sara@nowhere.net"),
                         dateCreated: now - 2).save(failOnError: true)
         def phil = new User(
                         loginId: "phil",
-                        password: "thomas",
+                        passwordHash: springSecurityService.encodePassword("thomas"),
                         profile: new Profile(fullName: "Phil Potts", email: "phil@nowhere.net"),
                         dateCreated: now)
         def dillon = new User(loginId: "dillon",
-                        password: "crikey",
+                        passwordHash: springSecurityService.encodePassword("crikey"),
                         profile: new Profile(fullName: "Dillon Jessop", email: "dillon@nowhere.net"),
                         dateCreated: now - 2).save(failOnError: true)
 
@@ -150,5 +155,25 @@ class BootStrap {
 
         dillon.dateCreated = now - 2
         dillon.save(failOnError: true, flush: true)
+    }
+
+    private createAdminUserIfRequired () {
+        println "Creating admin user"
+        if (!User.findByLoginId("admin")) {
+            println "Fresh Database. Creating ADMIN user."
+        
+            def profile = new Profile(email: "admin@yourhost.com", fullName: "Administrator")
+            def adminRole = new Role(authority: "ROLE_ADMIN").save(failOnError: true)
+            def adminUser = new User(
+                loginId: "admin",
+                passwordHash: springSecurityService.encodePassword("secret"),
+                profile: profile,
+                enable: true)
+            adminUser.save(failOnError: true)
+            UserRole.create adminUser, adminRole
+        }
+        else {
+            println "Existing admin user, skipping creation"
+        }
     }
 }

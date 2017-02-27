@@ -4,6 +4,7 @@ import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
 import spock.lang.Specification
 import spock.lang.Unroll
+import grails.plugin.springsecurity.SpringSecurityService
 
 /**
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
@@ -24,7 +25,7 @@ class UserControllerSpec extends Specification {
         given: "a set of user parameters"
         params.with {
             loginId = "glen_a_smith"
-            password = "winnning"
+            passwordHash = "winnning"
             homepage = "http://blogs.bytecode.com.au/glen"
         }
     
@@ -33,6 +34,11 @@ class UserControllerSpec extends Specification {
         params['profile.email'] = "glen@bytecode.com.au"
         params['profile.homepage'] = "http://blogs.bytecode.au/glen"
     
+        and: "a mock security service"
+        controller.springSecurityService = Stub(SpringSecurityService) {
+            encodePassword("winning") >> "HFDJDKALSJDF"
+        }
+
         when: "the user is registered"
         request.method = "POST"
         controller.register()
@@ -67,9 +73,7 @@ class UserControllerSpec extends Specification {
         loginId | password      | passwordRepeat        | anticipatedValid      | fieldInError          | errorCode
         "glen"  | "password"    | "no-match"            | false                 | "passwordRepeat"      | "validator.invalid"
         "peter" | "password"    | "password"            | true                  | null                  | null
-        "thomas"| "short"       | "short"               | false                 | "password"            | "size.toosmall"
-        "freddy"| null          | null                  | false                 | "password"            | "nullable"
-        "freddy"| ""            | ""                    | false                 | "password"            | "blank"
+        "a"     | "password"    | "password"            | false                 | "loginId"             | "size.toosmall"
     }
 
     def "Invoking the register action via a command object"() {
@@ -87,6 +91,11 @@ class UserControllerSpec extends Specification {
         and: "which has been validated"
         urc.validate()
     
+        and: "a mock security service"
+        controller.springSecurityService = Stub(SpringSecurityService) {
+            encodePassword("password") >> "HFDJDKALSJDF"
+        }
+
         when: "the register action is invoked"
         controller.register2(urc)
     

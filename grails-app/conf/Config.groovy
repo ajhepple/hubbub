@@ -179,3 +179,27 @@ grails.cache.config = {
 
 // Fix grails taglib <g:paginate/> to work with Twitter bootstap CSS
 grails.plugins.twitterbootstrap.fixtaglib = true
+
+
+// Added by the Spring Security Core plugin:
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.grailsinaction.User'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.grailsinaction.UserRole'
+grails.plugin.springsecurity.authority.className = 'com.grailsinaction.Role'
+grails.plugin.springsecurity.userLookup.usernamePropertyName = "loginId"
+grails.plugin.springsecurity.userLookup.passwordPropertyName = "passwordHash"
+
+grails.plugin.springsecurity.securityConfigType = "InterceptUrlMap"
+
+grails.plugin.springsecurity.interceptUrlMap = [
+	'/':                ['permitAll'],
+	'/post/global':     ['permitAll'],
+	'/user/**':         ['permitAll'],
+	'/login/**':        ['permitAll'],
+	'/logout/**':       ['permitAll'],
+	'/**/js/**':        ['permitAll'],
+	'/**/css/**':       ['permitAll'],
+	'/**/images/**':    ['permitAll'],
+	//'/**':   ['isFullyAuthenticated()'] // i.e. require full authentication, every session
+	'/**':   ['isAuthenticated()'] // makes use of the 'remember me' facility between sessions
+]
+

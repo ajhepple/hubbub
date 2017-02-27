@@ -117,5 +117,8 @@ grails.project.dependency.resolution = {
         // is declared above, along with compilation dependencies for the
         // Lucene spellchecker and highlighter
         compile ':searchable:0.6.6'
+
+        // For authentication and authorisation in Chapter 11
+        compile "org.grails.plugins:spring-security-core:2.0.0"
     }
 }

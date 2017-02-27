@@ -5,6 +5,7 @@ class UserController {
     static scaffold = true
 
     def mailService
+    def springSecurityService
     
     // Navigation plugin config
     static navigation = [
@@ -40,6 +41,7 @@ class UserController {
     def register () {
         if (request.method == "POST") {
             def user = new User(params)
+            user.passwordHash = springSecurityService.encodePassword(params.password)
             if (user.validate() && user.save()) {
                 flash.message = "Successfully Created User"
                 redirect(uri: '/')
@@ -55,6 +57,7 @@ class UserController {
             render view: "register", model: [user: urc]
         } else {
             def user = new User(urc.properties)
+            user.passwordHash = springSecurityService.encodePassword(params.password)
             user.profile = new Profile(urc.properties)
             if (user.validate() && user.save()) {
                 flash.message = "Welcome aboard, ${urc.fullName ?: urc.loginId}"
@@ -72,7 +75,7 @@ class UserController {
 
         if (user) {
             // update the user with a blacklist technique
-            bindDate(user, params, ['loginId','password'])
+            bindData(user, params, ['loginId','passwordHash'])
             // update their profile using a whitelist technique
             user.profile.properties['email','fullName'] = params
             if (user.save()) {
@@ -132,10 +135,15 @@ class UserRegistrationCommand {
     static constraints = {
         importFrom Profile
         importFrom User
-    
+        password(size: 6..8, blank: false,
+            validator: { pwd, urc ->
+                return pwd != urc.loginId
+            }
+        )
         passwordRepeat(nullable: false,
-                validator: { passwd2, urc ->
-                    return passwd2 == urc.password
-                })
+                validator: { pwd2, urc ->
+                    return pwd2 == urc.password
+                }
+        )
     }
 }
