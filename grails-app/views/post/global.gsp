@@ -7,18 +7,23 @@
     <meta name= "layout" content="main"/>
 </head>
 <body>
+    <h1>Global Timeline !</h1>
+
+    <g:if test="${flash.message}">
+        <div class="alert">${flash.message}</div>
+    </g:if>
+
+    <sec:ifLoggedIn>
+        <div id="new-post">
+            <h3>What is ${currentUser.profile ? currentUser.profile.fullName : currentUser.loginId} hacking on right now?</h3>
+            ... TODO ...
+        </div>
+    </sec:ifLoggedIn>
 
     <div id="all-posts">
-        <g:each in="${posts}" var="post">
-            <div class="post-entry">
-                <img class="profile-picture" src="${createLink(controller: 'image', action: 'renderImage', 
-                        id: post.user.loginId)}"/>
-                <g:link action="timeline" id="${post.user.loginId}">${post.user.loginId}</g:link>
-                <div class="post-text">${post.content}</div>
-                <div class="post-date">${post.dateCreated}</div>
-            </div>
-        </g:each>
+        <g:render template="postEntry" collection="${posts}" var="post"/>
     </div>
+
     <div class="pagination">
         <g:paginate action="global" total="${postCount}" max="8" />
     </div>

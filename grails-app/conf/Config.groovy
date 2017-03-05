@@ -187,19 +187,22 @@ grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.grailsinac
 grails.plugin.springsecurity.authority.className = 'com.grailsinaction.Role'
 grails.plugin.springsecurity.userLookup.usernamePropertyName = "loginId"
 grails.plugin.springsecurity.userLookup.passwordPropertyName = "passwordHash"
-
+grails.plugin.springsecurity.rejectIfNoRule = false
 grails.plugin.springsecurity.securityConfigType = "InterceptUrlMap"
-
 grails.plugin.springsecurity.interceptUrlMap = [
 	'/':                ['permitAll'],
+	'/image/**':        ['permitAll'],
 	'/post/global':     ['permitAll'],
-	'/user/**':         ['permitAll'],
+        '/user/register':   ['permitAll'],
 	'/login/**':        ['permitAll'],
 	'/logout/**':       ['permitAll'],
 	'/**/js/**':        ['permitAll'],
 	'/**/css/**':       ['permitAll'],
 	'/**/images/**':    ['permitAll'],
+	'/user/**':         ['hasRole("ROLE_ADMIN")'],
+	'/role/**':         ['hasRole("ROLE_ADMIN")'],
 	//'/**':   ['isFullyAuthenticated()'] // i.e. require full authentication, every session
 	'/**':   ['isAuthenticated()'] // makes use of the 'remember me' facility between sessions
 ]
 
+grails.plugin.springsecurity.successHandler.defaultTargetUrl = "/timeline"

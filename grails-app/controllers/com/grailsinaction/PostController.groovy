@@ -14,6 +14,7 @@ class PostController {
     ]
 
     PostService postService
+    def springSecurityService
 
     def home () {
         if(!params.id) {
@@ -33,7 +34,7 @@ class PostController {
             [user: user] 
         }
     }
-
+/*
     // Adding a new post means that a cached timeline must be evicted
     @CacheEvict(value='userTimeline', key='#id')
     def addPost (String id, String content) {
@@ -64,25 +65,58 @@ class PostController {
             }
         }
     }
+*/
 
-    // Cache this action using the userTimeline cache and a custom key
-    // ** I later concluded that the session object is not avialable
-    // ** in the context of this cache annotaion.
-    // @CachePut(value='userTimeline', key='#session.user.loginId')
-    def personal () {
-        def user = session.user?.refresh()
-
-        if (user) {
-            render view: 'timeline', model: [user: user]
-        } else {
-            redirect(uri: '/login')
+    def addPostAjax (String content) {
+        def user = springSecurityService.currentUser
+        try {
+            def newPost = postService.createPost(user.loginId, content)
+            def recentPosts = Post.findAllByUser(
+                    user,
+                    [sort: 'dateCreated', order: 'desc', max: 20])
+            render template: 'postEntry',
+                    collection: recentPosts,
+                    var: 'post'
+        } catch (PostException pe) {
+            render {
+                div(class: "errors", pe.message ?: "unfathomable error")
+            }
         }
     }
 
-    @Cacheable('globalTimeline')
+    // Adding a new post means that a cached timeline must be evicted
+    // @CacheEvict(value='userTimeline', key='#id')
+    def addPost (String content) {
+        def user = springSecurityService.currentUser
+        try {
+            def newPost = postService.createPost(user.loginId, content)
+            flash.message = "Added new post (using sss): ${newPost.content}"
+        } catch (PostException pe) {
+            flash.message = pe.message
+        }
+        redirect(action: 'timeline', id: user.loginId)
+    }
+
+    // Cache this action using the userTimeline cache and a custom key
+    // ** I later concluded that the session object is not avialable
+    // ** in the context of this cache annotation.
+    // @CachePut(value='userTimeline', key='#session.user.loginId')
+    def personal () {
+        //def user = session.user?.refresh()
+        def user = springSecurityService.currentUser
+
+//        if (user) {
+            render view: 'timeline', model: [user: user]
+//        } else {
+//            redirect(uri: '/login')
+//        }
+    }
+
+    //@Cacheable('globalTimeline')
     def global () {
         params.max = params.int('max', 6)  //default value 6 if max not present
-        [posts: Post.list(params), postCount: Post.count()]
+        [ currentUser: springSecurityService.currentUser,
+                posts: Post.list(params), postCount: Post.count()]
     }
 
     def tinyUrl (String fullUrl) {

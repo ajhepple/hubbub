@@ -35,6 +35,13 @@
                 <!-- alternative navigation menu that is controller configurable -->
                 <nav:render group="tabs"/>
             </div>
+            <sec:ifLoggedIn>
+                <div class="container">
+                    <g:form name="logout-form" controller="logout" action="index">
+                        <g:submitButton name="sign-out" value="sign out"/>
+                    </g:form>
+                </div>
+            </sec:ifLoggedIn>
         </div>
 
         <div id="bd">

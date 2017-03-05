@@ -9,7 +9,6 @@ class UserRole implements Serializable {
 	User user
 	Role role
 
-	@Override
 	boolean equals(other) {
 		if (!(other instanceof UserRole)) {
 			return false
@@ -18,7 +17,6 @@ class UserRole implements Serializable {
 		other.user?.id == user?.id && other.role?.id == role?.id
 	}
 
-	@Override
 	int hashCode() {
 		def builder = new HashCodeBuilder()
 		if (user) builder.append(user.id)
@@ -27,24 +25,14 @@ class UserRole implements Serializable {
 	}
 
 	static UserRole get(long userId, long roleId) {
-		criteriaFor(userId, roleId).get()
-	}
-
-	static boolean exists(long userId, long roleId) {
-		criteriaFor(userId, roleId).count()
-	}
-
-	private static DetachedCriteria criteriaFor(long userId, long roleId) {
-		UserRole.where {
-			user == User.load(userId) &&
-			role == Role.load(roleId)
-		}
+                UserRole.where {
+                    user == User.load(userId) &&
+                    role == Role.load(roleId)
+                }.get()
 	}
 
 	static UserRole create(User user, Role role, boolean flush = false) {
-		def instance = new UserRole(user: user, role: role)
-		instance.save(flush: flush, insert: true)
-		instance
+                new UserRole(user: user, role:role).save(flush: flush, insert: true)
 	}
 
 	static boolean remove(User u, Role r, boolean flush = false) {
@@ -71,19 +59,6 @@ class UserRole implements Serializable {
 		UserRole.where { role == r }.deleteAll()
 
 		if (flush) { UserRole.withSession { it.flush() } }
-	}
-
-	static constraints = {
-		role validator: { Role r, UserRole ur ->
-			if (ur.user == null || ur.user.id == null) return
-			boolean existing = false
-			UserRole.withNewSession {
-				existing = UserRole.exists(ur.user.id, r.id)
-			}
-			if (existing) {
-				return 'userRole.exists'
-			}
-		}
 	}
 
 	static mapping = {
