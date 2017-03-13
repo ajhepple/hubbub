@@ -194,8 +194,8 @@ grails.plugin.springsecurity.interceptUrlMap = [
 	'/image/**':        ['permitAll'],
 	'/post/global':     ['permitAll'],
         '/user/register':   ['permitAll'],
-	'/login/**':        ['permitAll'],
-	'/logout/**':       ['permitAll'],
+	'/login':           ['permitAll'],
+	'/logout':          ['permitAll'],
 	'/**/js/**':        ['permitAll'],
 	'/**/css/**':       ['permitAll'],
 	'/**/images/**':    ['permitAll'],
@@ -205,4 +205,6 @@ grails.plugin.springsecurity.interceptUrlMap = [
 	'/**':   ['isAuthenticated()'] // makes use of the 'remember me' facility between sessions
 ]
 
+grails.plugin.springsecurity.auth.loginFormUrl = "/login"
+grails.plugin.springsecurity.failureHandler.defaultFailureUrl = "/login"
 grails.plugin.springsecurity.successHandler.defaultTargetUrl = "/timeline"

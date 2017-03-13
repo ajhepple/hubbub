@@ -13,9 +13,11 @@
         <div class="alert">${flash.message}</div>
     </g:if>
 
+    <%-- The sec:ifLoggedIn tag is provided by the Spring Security Plugin --%>
     <sec:ifLoggedIn>
         <div id="new-post">
-            <h3>What is ${currentUser.profile ? currentUser.profile.fullName : currentUser.loginId} hacking on right now?</h3>
+            <h3>What is ${currentUser.profile ? currentUser.profile.fullName : currentUser.loginId}
+                hacking on right now?</h3>
             ... TODO ...
         </div>
     </sec:ifLoggedIn>

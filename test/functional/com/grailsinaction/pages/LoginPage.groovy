@@ -1,6 +1,6 @@
 package com.grailsinaction.pages
 
-class LoginFormPage extends geb.Page {
+class LoginPage extends geb.Page {
 
     static url = "login"
 

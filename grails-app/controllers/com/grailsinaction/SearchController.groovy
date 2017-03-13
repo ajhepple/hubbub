@@ -2,6 +2,8 @@ package com.grailsinaction
 
 class SearchController {
 
+    def springSecurityService
+
     /* A search action that makes use of the Searchable plugin's highlighter
      * feature. The 'withHighlighter' closure takes a highlighter object that
      * is used to hold the word that was highlighted along with its 
@@ -31,7 +33,8 @@ class SearchController {
 
             // apply restriction to logged-in user's posts only, if necessary
             if (params.justMine) {
-                query += " loginId:${session.user.loginId}"
+                user = springSecurityService.currentUser
+                query += " loginId:${user.loginId}"
             }
 
             // Finaly, perform search using one of the overloaded methods

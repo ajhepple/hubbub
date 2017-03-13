@@ -15,6 +15,8 @@ class UrlMappings {
                 }
             }
 
+            "/login"(controller: "authentication", action: "form")
+
             // the timeline of the logged in user
             "/timeline" controller: "post", action: "personal"
 

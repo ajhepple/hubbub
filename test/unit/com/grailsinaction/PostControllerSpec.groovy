@@ -4,12 +4,13 @@ import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 import static grails.util.GrailsNameUtils.*
+import grails.plugin.springsecurity.SpringSecurityService
 
 /**
  * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
  */
 @TestFor(PostController)
-@Mock([User,Post,LameSecurityFilters])
+@Mock([User,Post])
 class PostControllerSpec extends Specification {
 
     def setup() {
@@ -50,63 +51,42 @@ class PostControllerSpec extends Specification {
     }
 
     def "Adding a new post to the timeline using a mocked PostService" () {
-        given: "a mock post service"
+        given: "mock post and security services"
         def mockPostService = Mock(PostService)
         1 * mockPostService.createPost(_, _) >> new Post(content: "Mock post")
         controller.postService = mockPostService
 
+        def securityService = Mock(SpringSecurityService)
+        _ * securityService.getCurrentUser() >> new User(loginId: "joe_cool")
+        controller.springSecurityService = securityService
+        
         when: "controller is invoked"
-        def result = controller.addPost("joe_cool", "Posting up a storm")
+        def result = controller.addPost("Mock post")
 
         then: "redirected to timeline, flash message tells us all is well"
-        flash.message ==~ /Added new post: Mock.*/
+        flash.message ==~ /Added new post.*Mock post*/
         response.redirectedUrl == '/users/joe_cool'
+        // or, without the custom UrlMapping 
+        // response.redirectedUrl == '/post/timeline/joe_cool'
     }
 
     def "Attempting to add an empty post results in error" () {
-        given: "A user with posts in the db"
-        User chuck = new User(
-                loginId: "chuck_norris",
-                passwordHash: "asdfjkljk").save(failOnError: true)
+        given: "A mock security services"
+        def securityService = Mock(SpringSecurityService)
+        _ * securityService.getCurrentUser() >> new User(loginId: "chuck_norris")
+        controller.springSecurityService = securityService
     
         and: "a mock PostService"
         def mockPostService = Mock(PostService)
         1 * mockPostService.createPost(_, null) >> { throw new PostException(message: "Invalid or empty post")}
         controller.postService = mockPostService
 
-        and: "A loginId parameter"
-        params.id = chuck.loginId
-    
-        and: "Empty content for the post"
-        params.content = null
-    
         when: "addPost is invoked"
-        def model = controller.addPost()
+        def model = controller.addPost(null)
     
         then: "Our flash message and redirect confirms the error"
         flash.message == "Invalid or empty post"
-        response.redirectedUrl == "/users/${chuck.loginId}"
-        Post.countByUser(chuck) == 0
-    }
-
-    def "Attempting to add a post for invalid user" () {
-        given: "An invalid user id"
-        params.id = "non_existant"
-    
-        and: "a mock PostService"
-        def mockPostService = Mock(PostService)
-        1 * mockPostService.createPost(_, _) >> { throw new PostException(message: "Invalid user")}
-        controller.postService = mockPostService
-
-        and: "some valid post content"
-        params.content = "A valid post."
-    
-        when: "addPost is invoked"
-        def model = controller.addPost()
-    
-        then: "a flash message is available and redirect to invalid user's timeline"
-        flash.message == "Invalid user"
-        response.redirectedUrl == "/users/${params.id}"
+        response.redirectedUrl == "/users/chuck_norris"
     }
 
     @spock.lang.Unroll  //allows use of where clause parameters in test name
@@ -133,14 +113,15 @@ class PostControllerSpec extends Specification {
         getPropertyName('PostService') == 'postService'
     }
 
-    /** Testing the behavour of security filters defined in grails-app/conf */
-    def "Exercising security filter for unauthenticated user"() {
-        when:
-        withFilters(action: "addPost") {
-            controller.addPost("glen_a_smith", "A first post")
-        }
-        
-        then:
-        response.redirectedUrl == '/login/form'
-    }
+// (These security filters were superceded by Spring Security Service)
+//    /** Testing the behavour of security filters defined in grails-app/conf */
+//    def "Exercising security filter for unauthenticated user"() {
+//        when:
+//        //withFilters(action: "addPost") {
+//            controller.addPost("A first post")
+//        //}
+//        
+//        then:
+//        response.redirectedUrl == '/login'
+//    }
 }
